@@ -34,7 +34,6 @@
           <div class="gb-form">
             <input type="text" id="gb-name" placeholder="Your Name" required>
             <input type="email" id="gb-email" placeholder="Your Email (optional)">
-            <input type="url" id="gb-website" placeholder="Your Website (optional)">
             <textarea id="gb-message" placeholder="Your Message" required></textarea>
             <button id="gb-submit">Submit</button>
           </div>
@@ -234,14 +233,12 @@
     async submitEntry() {
       const nameInput = document.getElementById('gb-name');
       const emailInput = document.getElementById('gb-email');
-      const websiteInput = document.getElementById('gb-website');
       const messageInput = document.getElementById('gb-message');
       const submitBtn = document.getElementById('gb-submit');
       const entriesContainer = document.getElementById('gb-entries');
 
       const name = nameInput.value.trim();
       const email = emailInput.value.trim();
-      const website = websiteInput.value.trim();
       const message = messageInput.value.trim();
 
       if (!name || !message) {
@@ -258,7 +255,7 @@
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ name, email, website, message }),
+          body: JSON.stringify({ name, email, message }),
         });
 
         if (response.ok) {
@@ -270,7 +267,6 @@
           // Clear form
           nameInput.value = '';
           emailInput.value = '';
-          websiteInput.value = '';
           messageInput.value = '';
 
           setTimeout(() => successMsg.remove(), 5000);
