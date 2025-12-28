@@ -18,7 +18,7 @@ router.get('/all', requireAdmin, (req: Request, res: Response) => {
 
 // Create new entry
 router.post('/', (req: Request, res: Response) => {
-  const { name, email, message, website } = req.body;
+  const { name, email, message, website, page_title, page_url } = req.body;
 
   if (!name || !message) {
     return res.status(400).json({ error: 'Name and message are required' });
@@ -26,8 +26,8 @@ router.post('/', (req: Request, res: Response) => {
 
   try {
     const result = db
-      .prepare('INSERT INTO entries (name, email, message, website, approved) VALUES (?, ?, ?, ?, ?)')
-      .run(name, email || null, message, website || null, 0);
+      .prepare('INSERT INTO entries (name, email, message, website, page_title, page_url, approved) VALUES (?, ?, ?, ?, ?, ?, ?)')
+      .run(name, email || null, message, website || null, page_title || null, page_url || null, 0);
 
     res.status(201).json({ id: result.lastInsertRowid, message: 'Entry submitted successfully' });
   } catch (error) {

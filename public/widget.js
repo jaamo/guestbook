@@ -26,6 +26,10 @@
     }
 
     render(container) {
+      // Auto-detect page title and URL
+      const pageTitle = document.title || 'Untitled Page';
+      const pageUrl = window.location.href;
+
       container.innerHTML = `
         <div class="gb-widget gb-theme-${this.options.theme}">
           <div class="gb-header">
@@ -34,6 +38,8 @@
           <div class="gb-form">
             <input type="text" id="gb-name" placeholder="Your Name" required>
             <input type="email" id="gb-email" placeholder="Your Email (optional)">
+            <input type="text" id="gb-page-title" value="${this.escapeHtml(pageTitle)}" readonly disabled class="gb-page-title">
+            <input type="hidden" id="gb-page-url" value="${this.escapeHtml(pageUrl)}">
             <textarea id="gb-message" placeholder="Your Message" required></textarea>
             <button id="gb-submit">Submit</button>
           </div>
@@ -93,6 +99,16 @@
           background: #2a2a2a;
           color: #fff;
           border-color: #444;
+        }
+        .gb-form input.gb-page-title {
+          background: #f5f5f5;
+          color: #666;
+          cursor: not-allowed;
+          font-style: italic;
+        }
+        .gb-theme-dark .gb-form input.gb-page-title {
+          background: #333;
+          color: #aaa;
         }
         .gb-form textarea {
           min-height: 100px;
@@ -162,6 +178,21 @@
         .gb-theme-dark .gb-entry-website a {
           color: #4da3ff;
         }
+        .gb-entry-page {
+          margin-bottom: 8px;
+          font-size: 12px;
+          color: #666;
+        }
+        .gb-theme-dark .gb-entry-page {
+          color: #aaa;
+        }
+        .gb-entry-page a {
+          color: #007bff;
+          text-decoration: none;
+        }
+        .gb-theme-dark .gb-entry-page a {
+          color: #4da3ff;
+        }
         .gb-loading,
         .gb-error,
         .gb-empty {
@@ -217,6 +248,7 @@
     renderEntry(entry) {
       const date = new Date(entry.created_at).toLocaleDateString();
       const website = entry.website ? `<div class="gb-entry-website"><a href="${entry.website}" target="_blank" rel="noopener">${entry.website}</a></div>` : '';
+      const pageInfo = entry.page_title ? `<div class="gb-entry-page"><small>Re: <a href="${this.escapeHtml(entry.page_url || '#')}" target="_blank" rel="noopener">${this.escapeHtml(entry.page_title)}</a></small></div>` : '';
       
       return `
         <div class="gb-entry">
@@ -224,6 +256,7 @@
             <span class="gb-entry-name">${this.escapeHtml(entry.name)}</span>
             <span class="gb-entry-date">${date}</span>
           </div>
+          ${pageInfo}
           <div class="gb-entry-message">${this.escapeHtml(entry.message)}</div>
           ${website}
         </div>
@@ -233,12 +266,16 @@
     async submitEntry() {
       const nameInput = document.getElementById('gb-name');
       const emailInput = document.getElementById('gb-email');
+      const pageTitleInput = document.getElementById('gb-page-title');
+      const pageUrlInput = document.getElementById('gb-page-url');
       const messageInput = document.getElementById('gb-message');
       const submitBtn = document.getElementById('gb-submit');
       const entriesContainer = document.getElementById('gb-entries');
 
       const name = nameInput.value.trim();
       const email = emailInput.value.trim();
+      const pageTitle = pageTitleInput.value.trim();
+      const pageUrl = pageUrlInput.value.trim();
       const message = messageInput.value.trim();
 
       if (!name || !message) {
@@ -255,7 +292,7 @@
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ name, email, message }),
+          body: JSON.stringify({ name, email, message, page_title: pageTitle, page_url: pageUrl }),
         });
 
         if (response.ok) {

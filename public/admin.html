@@ -348,6 +348,7 @@
               <button class="btn-delete btn-small" onclick="deleteEntry(${entry.id})">Delete</button>
             </div>
           </div>
+          ${entry.page_title ? `<div style="font-size: 12px; color: #666; margin-bottom: 5px;"><strong>Page:</strong> <a href="${escapeHtml(entry.page_url || '#')}" target="_blank">${escapeHtml(entry.page_title)}</a></div>` : ''}
           <div style="margin: 10px 0; line-height: 1.6;">${escapeHtml(entry.message)}</div>
           ${entry.website ? `<div style="font-size: 12px; color: #666;"><a href="${escapeHtml(entry.website)}" target="_blank">${escapeHtml(entry.website)}</a></div>` : ''}
           <div class="entry-date">${new Date(entry.created_at).toLocaleString()}</div>

@@ -13,10 +13,24 @@ export async function initDatabase() {
       email TEXT,
       message TEXT NOT NULL,
       website TEXT,
+      page_title TEXT,
+      page_url TEXT,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       approved INTEGER DEFAULT 0
     )
   `);
+
+  // Add new columns if they don't exist (for existing databases)
+  try {
+    db.exec('ALTER TABLE entries ADD COLUMN page_title TEXT');
+  } catch (e) {
+    // Column already exists, ignore
+  }
+  try {
+    db.exec('ALTER TABLE entries ADD COLUMN page_url TEXT');
+  } catch (e) {
+    // Column already exists, ignore
+  }
 
   // Admin users table
   db.exec(`
@@ -43,6 +57,8 @@ export interface GuestbookEntry {
   email: string | null;
   message: string;
   website: string | null;
+  page_title: string | null;
+  page_url: string | null;
   created_at: string;
   approved: number;
 }
