@@ -35,13 +35,17 @@
           <div class="gb-header">
             <h3>Guestbook</h3>
           </div>
-          <div class="gb-form">
+          <button id="gb-show-form" class="gb-show-form-btn">Leave a Message</button>
+          <div class="gb-form gb-form-hidden" id="gb-form-container">
             <input type="text" id="gb-name" placeholder="Your Name" required>
             <input type="email" id="gb-email" placeholder="Your Email (optional)">
             <input type="text" id="gb-page-title" value="${this.escapeHtml(pageTitle)}" readonly disabled class="gb-page-title">
             <input type="hidden" id="gb-page-url" value="${this.escapeHtml(pageUrl)}">
             <textarea id="gb-message" placeholder="Your Message" required></textarea>
-            <button id="gb-submit">Submit</button>
+            <div class="gb-form-actions">
+              <button id="gb-submit">Submit</button>
+              <button type="button" id="gb-cancel" class="gb-cancel-btn">Cancel</button>
+            </div>
           </div>
           <div class="gb-entries" id="gb-entries">
             <div class="gb-loading">Loading entries...</div>
@@ -83,6 +87,36 @@
         }
         .gb-form {
           margin-bottom: 30px;
+        }
+        .gb-form-hidden {
+          display: none;
+        }
+        .gb-show-form-btn {
+          background: #007bff;
+          color: white;
+          border: none;
+          padding: 10px 20px;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 14px;
+          width: 100%;
+          margin-bottom: 20px;
+        }
+        .gb-show-form-btn:hover {
+          background: #0056b3;
+        }
+        .gb-form-actions {
+          display: flex;
+          gap: 10px;
+        }
+        .gb-form-actions button {
+          flex: 1;
+        }
+        .gb-cancel-btn {
+          background: #6c757d;
+        }
+        .gb-cancel-btn:hover {
+          background: #5a6268;
         }
         .gb-form input,
         .gb-form textarea {
@@ -222,7 +256,35 @@
 
     attachEvents() {
       const submitBtn = document.getElementById('gb-submit');
+      const showFormBtn = document.getElementById('gb-show-form');
+      const cancelBtn = document.getElementById('gb-cancel');
+      const formContainer = document.getElementById('gb-form-container');
+      
       submitBtn?.addEventListener('click', () => this.submitEntry());
+      showFormBtn?.addEventListener('click', () => this.showForm());
+      cancelBtn?.addEventListener('click', () => this.hideForm());
+    }
+
+    showForm() {
+      const formContainer = document.getElementById('gb-form-container');
+      const showFormBtn = document.getElementById('gb-show-form');
+      if (formContainer) {
+        formContainer.classList.remove('gb-form-hidden');
+      }
+      if (showFormBtn) {
+        showFormBtn.style.display = 'none';
+      }
+    }
+
+    hideForm() {
+      const formContainer = document.getElementById('gb-form-container');
+      const showFormBtn = document.getElementById('gb-show-form');
+      if (formContainer) {
+        formContainer.classList.add('gb-form-hidden');
+      }
+      if (showFormBtn) {
+        showFormBtn.style.display = 'block';
+      }
     }
 
     async loadEntries() {
@@ -305,6 +367,9 @@
           nameInput.value = '';
           emailInput.value = '';
           messageInput.value = '';
+
+          // Hide form after successful submission
+          this.hideForm();
 
           setTimeout(() => successMsg.remove(), 5000);
         } else {
