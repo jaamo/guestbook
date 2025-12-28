@@ -213,19 +213,30 @@
           color: #4da3ff;
         }
         .gb-entry-page {
-          margin-bottom: 8px;
-          font-size: 12px;
-          color: #666;
+          margin-bottom: 10px;
+          padding: 8px 12px;
+          background: #e7f3ff;
+          border-left: 3px solid #007bff;
+          border-radius: 4px;
+          font-size: 13px;
         }
         .gb-theme-dark .gb-entry-page {
-          color: #aaa;
+          background: #1a3a5a;
+          border-left-color: #4da3ff;
         }
         .gb-entry-page a {
           color: #007bff;
           text-decoration: none;
+          font-weight: 500;
+        }
+        .gb-entry-page a:hover {
+          text-decoration: underline;
         }
         .gb-theme-dark .gb-entry-page a {
           color: #4da3ff;
+        }
+        .gb-entry-page-icon {
+          margin-right: 6px;
         }
         .gb-loading,
         .gb-error,
@@ -310,7 +321,17 @@
     renderEntry(entry) {
       const date = new Date(entry.created_at).toLocaleDateString();
       const website = entry.website ? `<div class="gb-entry-website"><a href="${entry.website}" target="_blank" rel="noopener">${entry.website}</a></div>` : '';
-      const pageInfo = entry.page_title ? `<div class="gb-entry-page"><small>Re: <a href="${this.escapeHtml(entry.page_url || '#')}" target="_blank" rel="noopener">${this.escapeHtml(entry.page_title)}</a></small></div>` : '';
+      
+      // Show page link if page_url exists
+      let pageInfo = '';
+      if (entry.page_url) {
+        const pageTitle = entry.page_title || 'View Post';
+        const pageUrl = entry.page_url;
+        pageInfo = `<div class="gb-entry-page">
+          <span class="gb-entry-page-icon">🔗</span>
+          <a href="${this.escapeHtml(pageUrl)}" target="_blank" rel="noopener">${this.escapeHtml(pageTitle)}</a>
+        </div>`;
+      }
       
       return `
         <div class="gb-entry">
