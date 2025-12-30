@@ -326,8 +326,47 @@
       }
     }
 
+    formatTimeAgo(dateString) {
+      const date = new Date(dateString);
+      const now = new Date();
+      const diffInSeconds = Math.floor((now - date) / 1000);
+
+      if (diffInSeconds < 60) {
+        return "juuri äskettäin";
+      }
+
+      const diffInMinutes = Math.floor(diffInSeconds / 60);
+      if (diffInMinutes < 60) {
+        return `${diffInMinutes} ${
+          diffInMinutes === 1 ? "minuutti" : "minuuttia"
+        } sitten`;
+      }
+
+      const diffInHours = Math.floor(diffInMinutes / 60);
+      if (diffInHours < 24) {
+        return `${diffInHours} ${
+          diffInHours === 1 ? "tunti" : "tuntia"
+        } sitten`;
+      }
+
+      const diffInDays = Math.floor(diffInHours / 24);
+      if (diffInDays < 30) {
+        return `${diffInDays} ${diffInDays === 1 ? "päivä" : "päivää"} sitten`;
+      }
+
+      const diffInMonths = Math.floor(diffInDays / 30);
+      if (diffInMonths < 12) {
+        return `${diffInMonths} ${
+          diffInMonths === 1 ? "kuukausi" : "kuukautta"
+        } sitten`;
+      }
+
+      const diffInYears = Math.floor(diffInMonths / 12);
+      return `${diffInYears} ${diffInYears === 1 ? "vuosi" : "vuotta"} sitten`;
+    }
+
     renderEntry(entry) {
-      const date = new Date(entry.created_at).toLocaleDateString();
+      const date = this.formatTimeAgo(entry.created_at);
       const website = entry.website
         ? `<div class="gb-entry-website"><a href="${entry.website}" target="_blank" rel="noopener">${entry.website}</a></div>`
         : "";
