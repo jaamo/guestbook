@@ -39,7 +39,7 @@
           <div class="gb-form gb-form-hidden" id="gb-form-container">
             <input type="text" id="gb-name" placeholder="Your Name" required>
             <input type="email" id="gb-email" placeholder="Your Email (optional)">
-            <input type="text" id="gb-page-title" value="${this.escapeHtml(pageTitle)}" readonly disabled class="gb-page-title">
+            <input type="text" id="gb-page-title" value="Episode: ${this.escapeHtml(pageTitle)}" readonly disabled class="gb-page-title">
             <input type="hidden" id="gb-page-url" value="${this.escapeHtml(pageUrl)}">
             <textarea id="gb-message" placeholder="Your Message" required maxlength="500"></textarea>
             <div class="gb-char-count" id="gb-char-count">0 / 500 characters</div>
@@ -373,7 +373,7 @@
         const pageUrl = entry.page_url;
         pageInfo = `<div class="gb-entry-page">
           <span class="gb-entry-page-icon">🔗</span>
-          <a href="${this.escapeHtml(pageUrl)}" target="_blank" rel="noopener">${this.escapeHtml(pageTitle)}</a>
+          <a href="${this.escapeHtml(pageUrl)}" target="_blank" rel="noopener">Episode: ${this.escapeHtml(pageTitle)}</a>
         </div>`;
       }
       
