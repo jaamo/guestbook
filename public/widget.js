@@ -41,7 +41,8 @@
             <input type="email" id="gb-email" placeholder="Your Email (optional)">
             <input type="text" id="gb-page-title" value="${this.escapeHtml(pageTitle)}" readonly disabled class="gb-page-title">
             <input type="hidden" id="gb-page-url" value="${this.escapeHtml(pageUrl)}">
-            <textarea id="gb-message" placeholder="Your Message" required></textarea>
+            <textarea id="gb-message" placeholder="Your Message" required maxlength="500"></textarea>
+            <div class="gb-char-count" id="gb-char-count">0 / 500 characters</div>
             <div class="gb-form-actions">
               <button id="gb-submit">Submit</button>
               <button type="button" id="gb-cancel" class="gb-cancel-btn">Cancel</button>
@@ -147,6 +148,22 @@
         .gb-form textarea {
           min-height: 100px;
           resize: vertical;
+        }
+        .gb-char-count {
+          font-size: 12px;
+          color: #666;
+          text-align: right;
+          margin-top: -5px;
+          margin-bottom: 10px;
+        }
+        .gb-theme-dark .gb-char-count {
+          color: #aaa;
+        }
+        .gb-char-count.gb-char-count-warning {
+          color: #ff9800;
+        }
+        .gb-char-count.gb-char-count-error {
+          color: #dc3545;
         }
         .gb-form button {
           background: #007bff;
@@ -270,10 +287,35 @@
       const showFormBtn = document.getElementById('gb-show-form');
       const cancelBtn = document.getElementById('gb-cancel');
       const formContainer = document.getElementById('gb-form-container');
+      const messageInput = document.getElementById('gb-message');
+      const charCount = document.getElementById('gb-char-count');
       
       submitBtn?.addEventListener('click', () => this.submitEntry());
       showFormBtn?.addEventListener('click', () => this.showForm());
       cancelBtn?.addEventListener('click', () => this.hideForm());
+      
+      // Update character counter
+      messageInput?.addEventListener('input', () => this.updateCharCount());
+    }
+
+    updateCharCount() {
+      const messageInput = document.getElementById('gb-message');
+      const charCount = document.getElementById('gb-char-count');
+      if (!messageInput || !charCount) return;
+      
+      const length = messageInput.value.length;
+      const maxLength = 500;
+      const remaining = maxLength - length;
+      
+      charCount.textContent = `${length} / ${maxLength} characters`;
+      
+      // Update styling based on remaining characters
+      charCount.classList.remove('gb-char-count-warning', 'gb-char-count-error');
+      if (remaining < 50) {
+        charCount.classList.add('gb-char-count-error');
+      } else if (remaining < 100) {
+        charCount.classList.add('gb-char-count-warning');
+      }
     }
 
     showForm() {
@@ -285,6 +327,8 @@
       if (showFormBtn) {
         showFormBtn.style.display = 'none';
       }
+      // Initialize character counter
+      this.updateCharCount();
     }
 
     hideForm() {
@@ -363,6 +407,11 @@
 
       if (!name || !message) {
         alert('Please fill in your name and message');
+        return;
+      }
+
+      if (message.length > 500) {
+        alert('Message cannot exceed 500 characters');
         return;
       }
 

@@ -24,6 +24,10 @@ router.post('/', (req: Request, res: Response) => {
     return res.status(400).json({ error: 'Name and message are required' });
   }
 
+  if (message.length > 500) {
+    return res.status(400).json({ error: 'Message cannot exceed 500 characters' });
+  }
+
   try {
     const result = db
       .prepare('INSERT INTO entries (name, email, message, website, page_title, page_url, approved) VALUES (?, ?, ?, ?, ?, ?, ?)')
