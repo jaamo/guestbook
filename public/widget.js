@@ -159,7 +159,7 @@
         }
         .gb-entry {
           display: flex;
-          margin-bottom: 20px;
+          margin-bottom: 40px;
           gap: 15px;
         }
         .gb-entry-left {
@@ -167,10 +167,8 @@
           width: 120px;
         }
         .gb-entry-name {
-          color: #007bff;
           font-weight: 500;
           display: block;
-          margin-bottom: 5px;
         }
         .gb-entry-date {
           font-size: 12px;
@@ -183,10 +181,22 @@
         .gb-entry-message {
           background: #f0f0f0;
           padding: 12px 16px;
-          border-radius: 12px;
+          border-radius: 8px;
           line-height: 1.6;
           white-space: pre-wrap;
           margin-bottom: 8px;
+          position: relative;
+        }
+        .gb-entry-message::before {
+          content: '';
+          position: absolute;
+          left: -8px;
+          top: 12px;
+          width: 0;
+          height: 0;
+          border-top: 8px solid transparent;
+          border-bottom: 8px solid transparent;
+          border-right: 8px solid #f0f0f0;
         }
         .gb-entry-website {
           margin-top: 5px;
