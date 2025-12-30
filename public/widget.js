@@ -32,25 +32,25 @@
 
       container.innerHTML = `
         <div class="gb-widget">
-          <button id="gb-show-form" class="gb-show-form-btn">Leave a Message</button>
+          <button id="gb-show-form" class="gb-show-form-btn">Jätä viesti</button>
           <div class="gb-form gb-form-hidden" id="gb-form-container">
-            <input type="text" id="gb-name" placeholder="Your Name" required>
-            <input type="email" id="gb-email" placeholder="Your Email (optional)">
-            <input type="text" id="gb-page-title" value="Episode: ${this.escapeHtml(
+            <input type="text" id="gb-name" placeholder="Nimesi" required>
+            <input type="email" id="gb-email" placeholder="Sähköpostisi (valinnainen)">
+            <input type="text" id="gb-page-title" value="Jakso: ${this.escapeHtml(
               pageTitle
             )}" readonly disabled class="gb-page-title">
             <input type="hidden" id="gb-page-url" value="${this.escapeHtml(
               pageUrl
             )}">
-            <textarea id="gb-message" placeholder="Your Message" required maxlength="500"></textarea>
-            <div class="gb-char-count" id="gb-char-count">0 / 500 characters</div>
+            <textarea id="gb-message" placeholder="Viestisi" required maxlength="500"></textarea>
+            <div class="gb-char-count" id="gb-char-count">0 / 500 merkkiä</div>
             <div class="gb-form-actions">
-              <button id="gb-submit">Submit</button>
-              <button type="button" id="gb-cancel" class="gb-cancel-btn">Cancel</button>
+              <button id="gb-submit">Lähetä</button>
+              <button type="button" id="gb-cancel" class="gb-cancel-btn">Peruuta</button>
             </div>
           </div>
           <div class="gb-entries" id="gb-entries">
-            <div class="gb-loading">Loading entries...</div>
+            <div class="gb-loading">Ladataan viestejä...</div>
           </div>
         </div>
       `;
@@ -251,7 +251,7 @@
       const maxLength = 500;
       const remaining = maxLength - length;
 
-      charCount.textContent = `${length} / ${maxLength} characters`;
+      charCount.textContent = `${length} / ${maxLength} merkkiä`;
 
       // Update styling based on remaining characters
       charCount.classList.remove(
@@ -299,7 +299,7 @@
 
         if (entries.length === 0) {
           entriesContainer.innerHTML =
-            '<div class="gb-empty">No entries yet. Be the first to leave a message!</div>';
+            '<div class="gb-empty">Ei vielä viestejä. Ole ensimmäinen, joka jättää viestin!</div>';
           return;
         }
 
@@ -308,7 +308,7 @@
           .join("");
       } catch (error) {
         entriesContainer.innerHTML =
-          '<div class="gb-error">Failed to load entries. Please try again later.</div>';
+          '<div class="gb-error">Viestien lataaminen epäonnistui. Yritä myöhemmin uudelleen.</div>';
         console.error("Error loading entries:", error);
       }
     }
@@ -322,13 +322,13 @@
       // Show page link if page_url exists
       let pageInfo = "";
       if (entry.page_url) {
-        const pageTitle = entry.page_title || "View Post";
+        const pageTitle = entry.page_title || "Näytä julkaisu";
         const pageUrl = entry.page_url;
         pageInfo = `<div class="gb-entry-page">
           <span class="gb-entry-page-icon">🔗</span>
           <a href="${this.escapeHtml(
             pageUrl
-          )}" target="_blank" rel="noopener">Episode: ${this.escapeHtml(
+          )}" target="_blank" rel="noopener">Jakso: ${this.escapeHtml(
           pageTitle
         )}</a>
         </div>`;
@@ -363,17 +363,17 @@
       const message = messageInput.value.trim();
 
       if (!name || !message) {
-        alert("Please fill in your name and message");
+        alert("Täytä nimesi ja viestisi");
         return;
       }
 
       if (message.length > 500) {
-        alert("Message cannot exceed 500 characters");
+        alert("Viesti ei voi ylittää 500 merkkiä");
         return;
       }
 
       submitBtn.disabled = true;
-      submitBtn.textContent = "Submitting...";
+      submitBtn.textContent = "Lähetetään...";
 
       try {
         const response = await fetch(`${this.options.apiUrl}/api/guestbook`, {
@@ -394,7 +394,7 @@
           const successMsg = document.createElement("div");
           successMsg.className = "gb-success";
           successMsg.textContent =
-            "Thank you! Your entry has been submitted and will be reviewed.";
+            "Kiitos! Viestisi on lähetetty ja se tarkistetaan.";
           entriesContainer?.parentElement?.insertBefore(
             successMsg,
             entriesContainer
@@ -410,14 +410,14 @@
 
           setTimeout(() => successMsg.remove(), 5000);
         } else {
-          alert("Failed to submit entry. Please try again.");
+          alert("Viestin lähetys epäonnistui. Yritä uudelleen.");
         }
       } catch (error) {
-        alert("An error occurred. Please try again.");
+        alert("Tapahtui virhe. Yritä uudelleen.");
         console.error("Error submitting entry:", error);
       } finally {
         submitBtn.disabled = false;
-        submitBtn.textContent = "Submit";
+        submitBtn.textContent = "Lähetä";
       }
     }
 
