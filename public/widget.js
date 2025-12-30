@@ -32,7 +32,10 @@
 
       container.innerHTML = `
         <div class="gb-widget">
-          <button id="gb-show-form" class="gb-show-form-btn">Jätä viesti</button>
+          <div class="gb-header">
+            <h3 class="gb-title color-font-black">Vieraskirja</h3>
+            <div class="button button--black" id="gb-show-form">Jätä viesti</div>
+          </div>
           <div class="gb-form gb-form-hidden" id="gb-form-container">
             <input type="text" id="gb-name" placeholder="Nimesi" required>
             <input type="email" id="gb-email" placeholder="Sähköpostisi (valinnainen)">
@@ -45,8 +48,8 @@
             <textarea id="gb-message" placeholder="Viestisi" required maxlength="500"></textarea>
             <div class="gb-char-count" id="gb-char-count">0 / 500 merkkiä</div>
             <div class="gb-form-actions">
-              <button id="gb-submit">Lähetä</button>
-              <button type="button" id="gb-cancel" class="gb-cancel-btn">Peruuta</button>
+              <div class="button button--black" id="gb-submit">Lähetä</div>
+              <div class="button button--black" id="gb-cancel">Peruuta</div>
             </div>
           </div>
           <div class="gb-entries" id="gb-entries">
@@ -72,25 +75,21 @@
           color: #333;
           box-sizing: border-box;
         }
+        .gb-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 20px;
+        }
+        .gb-title {
+          margin: 0;
+          font-size: 24px;
+        }
         .gb-form {
           margin-bottom: 30px;
         }
         .gb-form-hidden {
           display: none;
-        }
-        .gb-show-form-btn {
-          background: #007bff;
-          color: white;
-          border: none;
-          padding: 10px 20px;
-          border-radius: 4px;
-          cursor: pointer;
-          font-size: 14px;
-          width: 100%;
-          margin-bottom: 20px;
-        }
-        .gb-show-form-btn:hover {
-          background: #0056b3;
         }
         .gb-form-actions {
           display: flex;
@@ -428,7 +427,8 @@
         return;
       }
 
-      submitBtn.disabled = true;
+      submitBtn.classList.add("disabled");
+      submitBtn.style.pointerEvents = "none";
       submitBtn.textContent = "Lähetetään...";
 
       try {
@@ -472,7 +472,8 @@
         alert("Tapahtui virhe. Yritä uudelleen.");
         console.error("Error submitting entry:", error);
       } finally {
-        submitBtn.disabled = false;
+        submitBtn.classList.remove("disabled");
+        submitBtn.style.pointerEvents = "";
         submitBtn.textContent = "Lähetä";
       }
     }
