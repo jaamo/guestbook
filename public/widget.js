@@ -158,28 +158,35 @@
           margin-top: 20px;
         }
         .gb-entry {
-          padding: 15px;
-          margin-bottom: 15px;
-          border: 1px solid #e0e0e0;
-          border-radius: 4px;
-          background: #f9f9f9;
-        }
-        .gb-entry-header {
           display: flex;
-          justify-content: space-between;
-          margin-bottom: 10px;
-          font-weight: bold;
+          margin-bottom: 20px;
+          gap: 15px;
+        }
+        .gb-entry-left {
+          flex-shrink: 0;
+          width: 120px;
         }
         .gb-entry-name {
           color: #007bff;
+          font-weight: 500;
+          display: block;
+          margin-bottom: 5px;
         }
         .gb-entry-date {
           font-size: 12px;
           color: #666;
+          display: block;
+        }
+        .gb-entry-right {
+          flex: 1;
         }
         .gb-entry-message {
+          background: #f0f0f0;
+          padding: 12px 16px;
+          border-radius: 12px;
           line-height: 1.6;
           white-space: pre-wrap;
+          margin-bottom: 8px;
         }
         .gb-entry-website {
           margin-top: 5px;
@@ -190,11 +197,7 @@
           text-decoration: none;
         }
         .gb-entry-page {
-          margin-bottom: 10px;
-          padding: 8px 12px;
-          background: #e7f3ff;
-          border-left: 3px solid #007bff;
-          border-radius: 4px;
+          margin-top: 8px;
           font-size: 13px;
         }
         .gb-entry-page a {
@@ -336,13 +339,17 @@
 
       return `
         <div class="gb-entry">
-          <div class="gb-entry-header">
+          <div class="gb-entry-left">
             <span class="gb-entry-name">${this.escapeHtml(entry.name)}</span>
             <span class="gb-entry-date">${date}</span>
           </div>
-          ${pageInfo}
-          <div class="gb-entry-message">${this.escapeHtml(entry.message)}</div>
-          ${website}
+          <div class="gb-entry-right">
+            <div class="gb-entry-message">${this.escapeHtml(
+              entry.message
+            )}</div>
+            ${pageInfo}
+            ${website}
+          </div>
         </div>
       `;
     }
