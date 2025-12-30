@@ -1,15 +1,15 @@
-(function() {
-  'use strict';
+(function () {
+  "use strict";
 
-  const API_URL = window.location.origin.replace(/:\d+$/, ':3000') || 'http://localhost:3000';
-  
+  const API_URL =
+    window.location.origin.replace(/:\d+$/, ":3000") || "http://localhost:3000";
+
   class GuestbookWidget {
     constructor(containerId, options = {}) {
-      this.containerId = containerId || 'guestbook-widget';
+      this.containerId = containerId || "guestbook-widget";
       this.options = {
         apiUrl: options.apiUrl || API_URL,
-        theme: options.theme || 'light',
-        ...options
+        ...options,
       };
       this.init();
     }
@@ -27,20 +27,21 @@
 
     render(container) {
       // Auto-detect page title and URL
-      const pageTitle = document.title || 'Untitled Page';
+      const pageTitle = document.title || "Untitled Page";
       const pageUrl = window.location.href;
 
       container.innerHTML = `
-        <div class="gb-widget gb-theme-${this.options.theme}">
-          <div class="gb-header">
-            <h3>Guestbook</h3>
-          </div>
+        <div class="gb-widget">
           <button id="gb-show-form" class="gb-show-form-btn">Leave a Message</button>
           <div class="gb-form gb-form-hidden" id="gb-form-container">
             <input type="text" id="gb-name" placeholder="Your Name" required>
             <input type="email" id="gb-email" placeholder="Your Email (optional)">
-            <input type="text" id="gb-page-title" value="Episode: ${this.escapeHtml(pageTitle)}" readonly disabled class="gb-page-title">
-            <input type="hidden" id="gb-page-url" value="${this.escapeHtml(pageUrl)}">
+            <input type="text" id="gb-page-title" value="Episode: ${this.escapeHtml(
+              pageTitle
+            )}" readonly disabled class="gb-page-title">
+            <input type="hidden" id="gb-page-url" value="${this.escapeHtml(
+              pageUrl
+            )}">
             <textarea id="gb-message" placeholder="Your Message" required maxlength="500"></textarea>
             <div class="gb-char-count" id="gb-char-count">0 / 500 characters</div>
             <div class="gb-form-actions">
@@ -59,32 +60,17 @@
     }
 
     injectStyles() {
-      if (document.getElementById('gb-widget-styles')) return;
+      if (document.getElementById("gb-widget-styles")) return;
 
-      const style = document.createElement('style');
-      style.id = 'gb-widget-styles';
+      const style = document.createElement("style");
+      style.id = "gb-widget-styles";
       style.textContent = `
         .gb-widget {
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-          max-width: 600px;
-          margin: 20px auto;
-          padding: 20px;
-          border: 1px solid #e0e0e0;
-          border-radius: 8px;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .gb-theme-dark {
-          background: #1a1a1a;
-          color: #fff;
-          border-color: #333;
-        }
-        .gb-theme-light {
+          width: 100%;
           background: #fff;
           color: #333;
-        }
-        .gb-header h3 {
-          margin: 0 0 20px 0;
-          font-size: 24px;
+          box-sizing: border-box;
         }
         .gb-form {
           margin-bottom: 30px;
@@ -129,21 +115,11 @@
           font-size: 14px;
           box-sizing: border-box;
         }
-        .gb-theme-dark .gb-form input,
-        .gb-theme-dark .gb-form textarea {
-          background: #2a2a2a;
-          color: #fff;
-          border-color: #444;
-        }
         .gb-form input.gb-page-title {
           background: #f5f5f5;
           color: #666;
           cursor: not-allowed;
           font-style: italic;
-        }
-        .gb-theme-dark .gb-form input.gb-page-title {
-          background: #333;
-          color: #aaa;
         }
         .gb-form textarea {
           min-height: 100px;
@@ -155,9 +131,6 @@
           text-align: right;
           margin-top: -5px;
           margin-bottom: 10px;
-        }
-        .gb-theme-dark .gb-char-count {
-          color: #aaa;
         }
         .gb-char-count.gb-char-count-warning {
           color: #ff9800;
@@ -191,10 +164,6 @@
           border-radius: 4px;
           background: #f9f9f9;
         }
-        .gb-theme-dark .gb-entry {
-          background: #2a2a2a;
-          border-color: #444;
-        }
         .gb-entry-header {
           display: flex;
           justify-content: space-between;
@@ -204,15 +173,9 @@
         .gb-entry-name {
           color: #007bff;
         }
-        .gb-theme-dark .gb-entry-name {
-          color: #4da3ff;
-        }
         .gb-entry-date {
           font-size: 12px;
           color: #666;
-        }
-        .gb-theme-dark .gb-entry-date {
-          color: #aaa;
         }
         .gb-entry-message {
           line-height: 1.6;
@@ -226,9 +189,6 @@
           color: #007bff;
           text-decoration: none;
         }
-        .gb-theme-dark .gb-entry-website a {
-          color: #4da3ff;
-        }
         .gb-entry-page {
           margin-bottom: 10px;
           padding: 8px 12px;
@@ -237,10 +197,6 @@
           border-radius: 4px;
           font-size: 13px;
         }
-        .gb-theme-dark .gb-entry-page {
-          background: #1a3a5a;
-          border-left-color: #4da3ff;
-        }
         .gb-entry-page a {
           color: #007bff;
           text-decoration: none;
@@ -248,9 +204,6 @@
         }
         .gb-entry-page a:hover {
           text-decoration: underline;
-        }
-        .gb-theme-dark .gb-entry-page a {
-          color: #4da3ff;
         }
         .gb-entry-page-icon {
           margin-right: 6px;
@@ -262,11 +215,6 @@
           padding: 20px;
           color: #666;
         }
-        .gb-theme-dark .gb-loading,
-        .gb-theme-dark .gb-error,
-        .gb-theme-dark .gb-empty {
-          color: #aaa;
-        }
         .gb-success {
           background: #d4edda;
           color: #155724;
@@ -274,76 +222,75 @@
           border-radius: 4px;
           margin-bottom: 15px;
         }
-        .gb-theme-dark .gb-success {
-          background: #1e4620;
-          color: #90ee90;
-        }
       `;
       document.head.appendChild(style);
     }
 
     attachEvents() {
-      const submitBtn = document.getElementById('gb-submit');
-      const showFormBtn = document.getElementById('gb-show-form');
-      const cancelBtn = document.getElementById('gb-cancel');
-      const formContainer = document.getElementById('gb-form-container');
-      const messageInput = document.getElementById('gb-message');
-      const charCount = document.getElementById('gb-char-count');
-      
-      submitBtn?.addEventListener('click', () => this.submitEntry());
-      showFormBtn?.addEventListener('click', () => this.showForm());
-      cancelBtn?.addEventListener('click', () => this.hideForm());
-      
+      const submitBtn = document.getElementById("gb-submit");
+      const showFormBtn = document.getElementById("gb-show-form");
+      const cancelBtn = document.getElementById("gb-cancel");
+      const formContainer = document.getElementById("gb-form-container");
+      const messageInput = document.getElementById("gb-message");
+      const charCount = document.getElementById("gb-char-count");
+
+      submitBtn?.addEventListener("click", () => this.submitEntry());
+      showFormBtn?.addEventListener("click", () => this.showForm());
+      cancelBtn?.addEventListener("click", () => this.hideForm());
+
       // Update character counter
-      messageInput?.addEventListener('input', () => this.updateCharCount());
+      messageInput?.addEventListener("input", () => this.updateCharCount());
     }
 
     updateCharCount() {
-      const messageInput = document.getElementById('gb-message');
-      const charCount = document.getElementById('gb-char-count');
+      const messageInput = document.getElementById("gb-message");
+      const charCount = document.getElementById("gb-char-count");
       if (!messageInput || !charCount) return;
-      
+
       const length = messageInput.value.length;
       const maxLength = 500;
       const remaining = maxLength - length;
-      
+
       charCount.textContent = `${length} / ${maxLength} characters`;
-      
+
       // Update styling based on remaining characters
-      charCount.classList.remove('gb-char-count-warning', 'gb-char-count-error');
+      charCount.classList.remove(
+        "gb-char-count-warning",
+        "gb-char-count-error"
+      );
       if (remaining < 50) {
-        charCount.classList.add('gb-char-count-error');
+        charCount.classList.add("gb-char-count-error");
       } else if (remaining < 100) {
-        charCount.classList.add('gb-char-count-warning');
+        charCount.classList.add("gb-char-count-warning");
       }
     }
 
     showForm() {
-      const formContainer = document.getElementById('gb-form-container');
-      const showFormBtn = document.getElementById('gb-show-form');
+      const formContainer = document.getElementById("gb-form-container");
+      const showFormBtn = document.getElementById("gb-show-form");
       if (formContainer) {
-        formContainer.classList.remove('gb-form-hidden');
+        formContainer.classList.remove("gb-form-hidden");
       }
       if (showFormBtn) {
-        showFormBtn.style.display = 'none';
+        showFormBtn.style.display = "none";
       }
       // Initialize character counter
       this.updateCharCount();
     }
 
     hideForm() {
-      const formContainer = document.getElementById('gb-form-container');
-      const showFormBtn = document.getElementById('gb-show-form');
+      const formContainer = document.getElementById("gb-form-container");
+      const showFormBtn = document.getElementById("gb-show-form");
       if (formContainer) {
-        formContainer.classList.add('gb-form-hidden');
+        formContainer.classList.add("gb-form-hidden");
       }
       if (showFormBtn) {
-        showFormBtn.style.display = 'block';
+        showFormBtn.style.display = "block";
       }
     }
 
     async loadEntries() {
-      const entriesContainer = document.getElementById('gb-entries');
+      const entriesContainer = document.getElementById("gb-entries");
       if (!entriesContainer) return;
 
       try {
@@ -351,32 +298,42 @@
         const entries = await response.json();
 
         if (entries.length === 0) {
-          entriesContainer.innerHTML = '<div class="gb-empty">No entries yet. Be the first to leave a message!</div>';
+          entriesContainer.innerHTML =
+            '<div class="gb-empty">No entries yet. Be the first to leave a message!</div>';
           return;
         }
 
-        entriesContainer.innerHTML = entries.map(entry => this.renderEntry(entry)).join('');
+        entriesContainer.innerHTML = entries
+          .map((entry) => this.renderEntry(entry))
+          .join("");
       } catch (error) {
-        entriesContainer.innerHTML = '<div class="gb-error">Failed to load entries. Please try again later.</div>';
-        console.error('Error loading entries:', error);
+        entriesContainer.innerHTML =
+          '<div class="gb-error">Failed to load entries. Please try again later.</div>';
+        console.error("Error loading entries:", error);
       }
     }
 
     renderEntry(entry) {
       const date = new Date(entry.created_at).toLocaleDateString();
-      const website = entry.website ? `<div class="gb-entry-website"><a href="${entry.website}" target="_blank" rel="noopener">${entry.website}</a></div>` : '';
-      
+      const website = entry.website
+        ? `<div class="gb-entry-website"><a href="${entry.website}" target="_blank" rel="noopener">${entry.website}</a></div>`
+        : "";
+
       // Show page link if page_url exists
-      let pageInfo = '';
+      let pageInfo = "";
       if (entry.page_url) {
-        const pageTitle = entry.page_title || 'View Post';
+        const pageTitle = entry.page_title || "View Post";
         const pageUrl = entry.page_url;
         pageInfo = `<div class="gb-entry-page">
           <span class="gb-entry-page-icon">🔗</span>
-          <a href="${this.escapeHtml(pageUrl)}" target="_blank" rel="noopener">Episode: ${this.escapeHtml(pageTitle)}</a>
+          <a href="${this.escapeHtml(
+            pageUrl
+          )}" target="_blank" rel="noopener">Episode: ${this.escapeHtml(
+          pageTitle
+        )}</a>
         </div>`;
       }
-      
+
       return `
         <div class="gb-entry">
           <div class="gb-entry-header">
@@ -391,13 +348,13 @@
     }
 
     async submitEntry() {
-      const nameInput = document.getElementById('gb-name');
-      const emailInput = document.getElementById('gb-email');
-      const pageTitleInput = document.getElementById('gb-page-title');
-      const pageUrlInput = document.getElementById('gb-page-url');
-      const messageInput = document.getElementById('gb-message');
-      const submitBtn = document.getElementById('gb-submit');
-      const entriesContainer = document.getElementById('gb-entries');
+      const nameInput = document.getElementById("gb-name");
+      const emailInput = document.getElementById("gb-email");
+      const pageTitleInput = document.getElementById("gb-page-title");
+      const pageUrlInput = document.getElementById("gb-page-url");
+      const messageInput = document.getElementById("gb-message");
+      const submitBtn = document.getElementById("gb-submit");
+      const entriesContainer = document.getElementById("gb-entries");
 
       const name = nameInput.value.trim();
       const email = emailInput.value.trim();
@@ -406,79 +363,88 @@
       const message = messageInput.value.trim();
 
       if (!name || !message) {
-        alert('Please fill in your name and message');
+        alert("Please fill in your name and message");
         return;
       }
 
       if (message.length > 500) {
-        alert('Message cannot exceed 500 characters');
+        alert("Message cannot exceed 500 characters");
         return;
       }
 
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Submitting...';
+      submitBtn.textContent = "Submitting...";
 
       try {
         const response = await fetch(`${this.options.apiUrl}/api/guestbook`, {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify({ name, email, message, page_title: pageTitle, page_url: pageUrl }),
+          body: JSON.stringify({
+            name,
+            email,
+            message,
+            page_title: pageTitle,
+            page_url: pageUrl,
+          }),
         });
 
         if (response.ok) {
-          const successMsg = document.createElement('div');
-          successMsg.className = 'gb-success';
-          successMsg.textContent = 'Thank you! Your entry has been submitted and will be reviewed.';
-          entriesContainer?.parentElement?.insertBefore(successMsg, entriesContainer);
+          const successMsg = document.createElement("div");
+          successMsg.className = "gb-success";
+          successMsg.textContent =
+            "Thank you! Your entry has been submitted and will be reviewed.";
+          entriesContainer?.parentElement?.insertBefore(
+            successMsg,
+            entriesContainer
+          );
 
           // Clear form
-          nameInput.value = '';
-          emailInput.value = '';
-          messageInput.value = '';
+          nameInput.value = "";
+          emailInput.value = "";
+          messageInput.value = "";
 
           // Hide form after successful submission
           this.hideForm();
 
           setTimeout(() => successMsg.remove(), 5000);
         } else {
-          alert('Failed to submit entry. Please try again.');
+          alert("Failed to submit entry. Please try again.");
         }
       } catch (error) {
-        alert('An error occurred. Please try again.');
-        console.error('Error submitting entry:', error);
+        alert("An error occurred. Please try again.");
+        console.error("Error submitting entry:", error);
       } finally {
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Submit';
+        submitBtn.textContent = "Submit";
       }
     }
 
     escapeHtml(text) {
-      const div = document.createElement('div');
+      const div = document.createElement("div");
       div.textContent = text;
       return div.innerHTML;
     }
   }
 
   // Auto-initialize if container exists
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-      const container = document.getElementById('guestbook-widget');
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => {
+      const container = document.getElementById("guestbook-widget");
       if (container) {
-        new GuestbookWidget('guestbook-widget');
+        new GuestbookWidget("guestbook-widget");
       }
     });
   } else {
-    const container = document.getElementById('guestbook-widget');
+    const container = document.getElementById("guestbook-widget");
     if (container) {
-      new GuestbookWidget('guestbook-widget');
+      new GuestbookWidget("guestbook-widget");
     }
   }
 
   // Export for manual initialization
-  if (typeof window !== 'undefined') {
+  if (typeof window !== "undefined") {
     window.GuestbookWidget = GuestbookWidget;
   }
 })();
-
