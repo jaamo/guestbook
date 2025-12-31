@@ -1,7 +1,13 @@
 import { Database } from 'bun:sqlite';
 import { hash } from 'bcryptjs';
+import { join } from 'path';
 
-const db = new Database('guestbook.db');
+// Use data directory if specified, otherwise current directory
+const dbPath = process.env.DB_PATH 
+  ? join(process.env.DB_PATH, 'guestbook.db')
+  : 'guestbook.db';
+
+const db = new Database(dbPath);
 
 // Initialize database tables
 export async function initDatabase() {

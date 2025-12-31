@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  guestbook:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: guestbook
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - JWT_SECRET=${JWT_SECRET:-your-secret-key-change-in-production}
+      - DB_PATH=/app/data
+    volumes:
+      # Persist database across container restarts
+      - ./data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/guestbook"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
