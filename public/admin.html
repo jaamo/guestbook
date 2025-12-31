@@ -83,6 +83,14 @@
       margin-bottom: 20px;
     }
 
+    .success {
+      background: #d4edda;
+      color: #155724;
+      padding: 10px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+
     .stats {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -105,6 +113,17 @@
 
     .stat-card p {
       color: #666;
+    }
+
+    .password-change-section {
+      margin-bottom: 40px;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 4px;
+    }
+
+    .password-change-section h2 {
+      margin-bottom: 20px;
     }
 
     .entries-list {
@@ -238,6 +257,27 @@
         <h3 id="approved-entries">0</h3>
         <p>Approved</p>
       </div>
+    </div>
+
+    <div class="password-change-section">
+      <h2>Change Password</h2>
+      <div id="password-change-error" class="error hidden"></div>
+      <div id="password-change-success" class="success hidden"></div>
+      <form id="password-change-form">
+        <div class="form-group">
+          <label for="old-password">Current Password</label>
+          <input type="password" id="old-password" required>
+        </div>
+        <div class="form-group">
+          <label for="new-password">New Password</label>
+          <input type="password" id="new-password" required minlength="6">
+        </div>
+        <div class="form-group">
+          <label for="confirm-password">Confirm New Password</label>
+          <input type="password" id="confirm-password" required minlength="6">
+        </div>
+        <button type="submit">Change Password</button>
+      </form>
     </div>
 
     <div class="entries-list">
@@ -408,6 +448,63 @@
       document.getElementById('login-form').reset();
       document.getElementById('login-error').classList.add('hidden');
     }
+
+    // Password change form handler
+    document.getElementById('password-change-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const oldPassword = document.getElementById('old-password').value;
+      const newPassword = document.getElementById('new-password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+      const errorDiv = document.getElementById('password-change-error');
+      const successDiv = document.getElementById('password-change-success');
+
+      // Hide previous messages
+      errorDiv.classList.add('hidden');
+      successDiv.classList.add('hidden');
+
+      // Validate passwords match
+      if (newPassword !== confirmPassword) {
+        errorDiv.textContent = 'New passwords do not match';
+        errorDiv.classList.remove('hidden');
+        return;
+      }
+
+      if (newPassword.length < 6) {
+        errorDiv.textContent = 'New password must be at least 6 characters long';
+        errorDiv.classList.remove('hidden');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/api/auth/change-password`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`
+          },
+          body: JSON.stringify({ oldPassword, newPassword })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          successDiv.textContent = 'Password changed successfully!';
+          successDiv.classList.remove('hidden');
+          document.getElementById('password-change-form').reset();
+          
+          // Hide success message after 5 seconds
+          setTimeout(() => {
+            successDiv.classList.add('hidden');
+          }, 5000);
+        } else {
+          errorDiv.textContent = data.error || 'Failed to change password';
+          errorDiv.classList.remove('hidden');
+        }
+      } catch (error) {
+        errorDiv.textContent = 'An error occurred. Please try again.';
+        errorDiv.classList.remove('hidden');
+      }
+    });
 
     function escapeHtml(text) {
       const div = document.createElement('div');

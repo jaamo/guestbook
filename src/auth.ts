@@ -99,3 +99,24 @@ export async function isAdmin(token: string | undefined): Promise<boolean> {
   return !!admin;
 }
 
+export async function changePassword(username: string, oldPassword: string, newPassword: string): Promise<boolean> {
+  const admin = db.prepare('SELECT * FROM admins WHERE username = ?').get(username) as {
+    username: string;
+    password_hash: string;
+  } | undefined;
+
+  if (!admin || !(await verifyPassword(oldPassword, admin.password_hash))) {
+    return false;
+  }
+
+  if (!newPassword || newPassword.length < 6) {
+    return false;
+  }
+
+  const { hash } = await import('bcryptjs');
+  const newPasswordHash = await hash(newPassword, 10);
+  
+  db.prepare('UPDATE admins SET password_hash = ? WHERE username = ?').run(newPasswordHash, username);
+  return true;
+}
+
