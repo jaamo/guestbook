@@ -12,11 +12,13 @@ An embeddable guestbook web application built with TypeScript, Bun, and Express.
 ## Setup
 
 1. Install dependencies:
+
 ```bash
 bun install
 ```
 
 2. Run the development server:
+
 ```bash
 bun run dev
 ```
@@ -35,8 +37,15 @@ Add this script tag to your website:
 ## Admin Access
 
 Default admin credentials:
+
 - Username: `admin`
 - Password: `admin123` (change this in production!)
 
 Access the admin dashboard at: `http://localhost:3000/admin`
 
+## Production deployment
+
+1. Log into server
+2. Pull latest changes
+3. Rebuild: `docker compose build`
+4. Restart: `docker compose down && docker compose up -d`
