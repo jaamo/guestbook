@@ -9,6 +9,7 @@
       this.containerId = containerId || "guestbook-widget";
       this.options = {
         apiUrl: options.apiUrl || API_URL,
+        disableEpisode: options.disableEpisode || false,
         ...options,
       };
       this.init();
@@ -26,9 +27,16 @@
     }
 
     render(container) {
-      // Auto-detect page title and URL
-      const pageTitle = document.title || "Untitled Page";
-      const pageUrl = window.location.href;
+      // Auto-detect page title and URL (only if not disabled)
+      const pageTitle = this.options.disableEpisode
+        ? ""
+        : document.title || "Untitled Page";
+      const pageUrl = this.options.disableEpisode ? "" : window.location.href;
+      const episodeField = this.options.disableEpisode
+        ? ""
+        : `<input type="text" id="gb-page-title" value="Jakso: ${this.escapeHtml(
+            pageTitle
+          )}" readonly disabled class="gb-page-title">`;
 
       container.innerHTML = `
         <div class="gb-widget">
@@ -39,9 +47,7 @@
           <div class="gb-form gb-form-hidden" id="gb-form-container">
             <input type="text" id="gb-name" placeholder="Nimesi" required>
             <input type="email" id="gb-email" placeholder="Sähköpostisi (valinnainen)">
-            <input type="text" id="gb-page-title" value="Jakso: ${this.escapeHtml(
-              pageTitle
-            )}" readonly disabled class="gb-page-title">
+            ${episodeField}
             <input type="hidden" id="gb-page-url" value="${this.escapeHtml(
               pageUrl
             )}">
@@ -413,7 +419,7 @@
 
       const name = nameInput.value.trim();
       const email = emailInput.value.trim();
-      const pageTitle = pageTitleInput.value.trim();
+      const pageTitle = pageTitleInput ? pageTitleInput.value.trim() : "";
       const pageUrl = pageUrlInput.value.trim();
       const message = messageInput.value.trim();
 
@@ -441,8 +447,8 @@
             name,
             email,
             message,
-            page_title: pageTitle,
-            page_url: pageUrl,
+            page_title: this.options.disableEpisode ? null : pageTitle,
+            page_url: this.options.disableEpisode ? null : pageUrl,
           }),
         });
 
@@ -486,18 +492,24 @@
   }
 
   // Auto-initialize if container exists
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => {
-      const container = document.getElementById("guestbook-widget");
-      if (container) {
-        new GuestbookWidget("guestbook-widget");
-      }
-    });
-  } else {
+  function initWidget() {
     const container = document.getElementById("guestbook-widget");
     if (container) {
-      new GuestbookWidget("guestbook-widget");
+      const options = {};
+      if (container.dataset.disableEpisode === "true") {
+        options.disableEpisode = true;
+      }
+      if (container.dataset.apiUrl) {
+        options.apiUrl = container.dataset.apiUrl;
+      }
+      new GuestbookWidget("guestbook-widget", options);
     }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initWidget);
+  } else {
+    initWidget();
   }
 
   // Export for manual initialization
