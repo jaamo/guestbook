@@ -11,28 +11,37 @@ This guide explains how to run the Guestbook application in Docker for productio
 
 ### Using Docker Compose (Recommended)
 
-1. **Set environment variables** (optional):
+### 1. **Create network** (if you need to connect to a reverse proxy, e.g. Caddy)
 
-   ```bash
-   export JWT_SECRET=your-secure-secret-key-here
-   ```
+This step is only necessary if you will connect the container to a load balancer or shared network with other services. Usually needs to be created just once:
 
-2. **Build and run**:
+```bash
+docker network create proxy-net
+```
 
-   ```bash
-   docker-compose up -d
-   ```
+### 2. **Set environment variables** (optional):
 
-3. **View logs**:
+```bash
+export JWT_SECRET=your-secure-secret-key-here
+```
 
-   ```bash
-   docker-compose logs -f
-   ```
+### 3. **Build and run**:
 
-4. **Stop the container**:
-   ```bash
-   docker-compose down
-   ```
+```bash
+docker-compose up -d
+```
+
+### 4. **View logs**:
+
+```bash
+docker-compose logs -f
+```
+
+### 5. **Stop the container**:
+
+```bash
+docker-compose down
+```
 
 ### Using Docker directly
 
