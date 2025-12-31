@@ -6,7 +6,19 @@ const router = Router();
 
 // Get all approved entries
 router.get('/', (req: Request, res: Response) => {
-  const entries = db.prepare('SELECT * FROM entries WHERE approved = 1 ORDER BY created_at DESC').all() as GuestbookEntry[];
+  const filterUrl = req.query.url as string | undefined;
+  
+  let query = 'SELECT * FROM entries WHERE approved = 1';
+  const params: any[] = [];
+  
+  if (filterUrl) {
+    query += ' AND page_url = ?';
+    params.push(filterUrl);
+  }
+  
+  query += ' ORDER BY created_at DESC';
+  
+  const entries = db.prepare(query).all(...params) as GuestbookEntry[];
   res.json(entries);
 });
 

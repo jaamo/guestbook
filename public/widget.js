@@ -10,6 +10,7 @@
       this.options = {
         apiUrl: options.apiUrl || API_URL,
         disableEpisode: options.disableEpisode || false,
+        filterUrl: options.filterUrl || null,
         ...options,
       };
       this.init();
@@ -312,7 +313,11 @@
       if (!entriesContainer) return;
 
       try {
-        const response = await fetch(`${this.options.apiUrl}/api/guestbook`);
+        let url = `${this.options.apiUrl}/api/guestbook`;
+        if (this.options.filterUrl) {
+          url += `?url=${encodeURIComponent(this.options.filterUrl)}`;
+        }
+        const response = await fetch(url);
         const entries = await response.json();
 
         if (entries.length === 0) {
@@ -501,6 +506,9 @@
       }
       if (container.dataset.apiUrl) {
         options.apiUrl = container.dataset.apiUrl;
+      }
+      if (container.dataset.filterUrl) {
+        options.filterUrl = container.dataset.filterUrl;
       }
       new GuestbookWidget("guestbook-widget", options);
     }
