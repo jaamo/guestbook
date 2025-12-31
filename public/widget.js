@@ -1,8 +1,17 @@
 (function () {
   "use strict";
 
-  const API_URL =
-    window.location.origin.replace(/:\d+$/, ":3000") || "http://localhost:3000";
+  const API_URL = (() => {
+    let scriptSrc =
+      document.currentScript?.src ||
+      (function () {
+        // Fallback for old browsers / unusual environments
+        const scripts = document.getElementsByTagName("script");
+        return scripts.length ? scripts[scripts.length - 1].src : "";
+      })();
+    // Remove trailing '/widget.js' or '\widget.js' from the script src
+    return scriptSrc.replace(/([/\\])widget\.js(\?.*)?$/, "");
+  })();
 
   class GuestbookWidget {
     constructor(containerId, options = {}) {
