@@ -47,7 +47,7 @@
         : window.location.pathname + window.location.search;
       const episodeField = this.options.disableEpisode
         ? ""
-        : `<input type="text" id="gb-page-title" value="Jakso: ${this.escapeHtml(
+        : `<input type="text" id="gb-page-title" value="${this.escapeHtml(
             pageTitle
           )}" readonly disabled class="gb-page-title">`;
 
@@ -402,9 +402,7 @@
           <span class="gb-entry-page-icon">🔗</span>
           <a href="${this.escapeHtml(
             pageUrl
-          )}" target="_blank" rel="noopener">Jakso: ${this.escapeHtml(
-          pageTitle
-        )}</a>
+          )}" target="_blank" rel="noopener">${this.escapeHtml(pageTitle)}</a>
         </div>`;
       }
 
