@@ -32,7 +32,10 @@
       const pageTitle = this.options.disableEpisode
         ? ""
         : document.title || "Untitled Page";
-      const pageUrl = this.options.disableEpisode ? "" : window.location.href;
+      // Use relative URL (pathname + search) instead of absolute URL
+      const pageUrl = this.options.disableEpisode
+        ? ""
+        : window.location.pathname + window.location.search;
       const episodeField = this.options.disableEpisode
         ? ""
         : `<input type="text" id="gb-page-title" value="Jakso: ${this.escapeHtml(
