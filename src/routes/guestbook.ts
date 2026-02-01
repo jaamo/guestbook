@@ -30,6 +30,23 @@ router.get("/all", requireAdmin, (req: Request, res: Response) => {
   res.json(entries);
 });
 
+// Send notification to ntfy.sh (fire and forget)
+async function sendNtfyNotification(name: string, message: string, pageTitle?: string) {
+  try {
+    const title = pageTitle ? `New guestbook entry on ${pageTitle}` : "New guestbook entry";
+    await fetch("https://ntfy.sh/tekkipodi-guestbook-hp23nH1", {
+      method: "POST",
+      headers: {
+        "Title": title,
+        "Tags": "guestbook,new",
+      },
+      body: `${name}: ${message}`,
+    });
+  } catch (error) {
+    console.error("Failed to send ntfy notification:", error);
+  }
+}
+
 // Create new entry
 router.post("/", (req: Request, res: Response) => {
   const { name, email, message, website, page_title, page_url } = req.body;
@@ -58,6 +75,9 @@ router.post("/", (req: Request, res: Response) => {
         page_url || null,
         0
       );
+
+    // Send notification asynchronously (don't await)
+    sendNtfyNotification(name, message, page_title);
 
     res.status(201).json({
       id: result.lastInsertRowid,
