@@ -43,7 +43,7 @@ async function hmacSha256(data: string, secret: string): Promise<string> {
 
 export async function generateToken(username: string): Promise<string> {
   const header = { alg: 'HS256', typ: 'JWT' };
-  const payload = { username, exp: Math.floor(Date.now() / 1000) + (24 * 60 * 60) };
+  const payload = { username, exp: Math.floor(Date.now() / 1000) + (30 * 24 * 60 * 60) };
   
   const headerEncoded = base64UrlEncode(JSON.stringify(header));
   const payloadEncoded = base64UrlEncode(JSON.stringify(payload));
